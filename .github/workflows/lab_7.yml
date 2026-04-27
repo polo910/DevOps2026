@@ -71,29 +71,42 @@ jobs:
           fi
           echo "OK: Znaleziono workflow studenta: $wf"
 
-          # Sprawdź czy branches: zawiera tylko 'main' (błąd 1 nienoprawiony)
-          # Używamy python3 żeby bezpiecznie parsować YAML
+          # Sprawdź błąd 1 (branches: main) i błąd 2 (brak pip install)
+          # UWAGA: PyYAML parsuje klucz `on:` jako boolean True, nie string "on"
           python3 - <<PYEOF
-          import sys, yaml
+          import sys, yaml, re
 
           with open("$wf") as f:
+              content = f.read()
+              f.seek(0)
               wf_data = yaml.safe_load(f)
 
-          on_section = wf_data.get("on", {}) or {}
+          failed = False
+
+          # --- Błąd 1: trigger branches ---
+          on_section = wf_data.get(True, {}) or {}
           push_cfg = on_section.get("push", {}) or {}
           branches = push_cfg.get("branches", [])
-
           if isinstance(branches, str):
               branches = [branches]
 
           if branches == ["main"]:
-              print("::error::Workflow nadal triggeruje się tylko na 'main' — zmień sekcję 'branches:' na swój feature branch (krok 6.3 instrukcji)")
-              sys.exit(1)
-
-          if not branches:
+              print("::error::BLAD 1 nie naprawiony: workflow triggeruje się tylko na 'main' — zmień sekcję 'branches:' na swój feature branch (krok 6.3 instrukcji)")
+              failed = True
+          elif not branches:
               print("::warning::Sekcja 'branches:' w workflow jest pusta lub brakuje jej — upewnij się że trigger jest prawidłowy")
           else:
               print(f"OK: Trigger branches: {branches}")
+
+          # --- Błąd 2: brak instalacji zależności ---
+          # Szukamy 'pip install' w pobliżu 'requirements' w treści workflow
+          if not re.search(r'pip install.{0,80}requirements', content, re.DOTALL | re.IGNORECASE):
+              print("::error::BLAD 2 nie naprawiony: brak kroku instalującego zależności z requirements.txt — dodaj 'pip install -r requirements.txt' przed krokiem z testami")
+              failed = True
+          else:
+              print("OK: Znaleziono instalację zależności z requirements.txt")
+
+          sys.exit(1 if failed else 0)
           PYEOF
 
       - name: Set up Python

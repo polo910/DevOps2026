@@ -20,11 +20,16 @@ jobs:
       - name: Find student app directory
         id: find-app
         run: |
-          app=$(find Lab_7 -maxdepth 1 -type d -name 'app_[0-9]*' ! -name 'app_0000' | sort | head -1)
-          if [ -z "$app" ]; then
+          mapfile -t apps < <(find Lab_7 -maxdepth 1 -type d -name 'app_[0-9]*' ! -name 'app_0000' | sort)
+          if [ "${#apps[@]}" -eq 0 ]; then
             echo "::error::Nie znaleziono folderu app_NNNNN — utwórz folder z numerem indeksu (np. app_123456)"
             exit 1
           fi
+          if [ "${#apps[@]}" -gt 1 ]; then
+            echo "::error::Znaleziono więcej niż jeden folder studenta: ${apps[*]} — zostaw tylko jeden folder app_nrIndeksu"
+            exit 1
+          fi
+          app="${apps[0]}"
           echo "app=$app" >> $GITHUB_OUTPUT
           echo "Znaleziono folder studenta: $app"
 
@@ -51,6 +56,45 @@ jobs:
             exit 1
           fi
           echo "OK: requirements.txt istnieje"
+
+      - name: Check student workflow exists and is fixed
+        run: |
+          echo "--- Sprawdzam workflow studenta ---"
+          # Wyciągamy numer indeksu z nazwy folderu, np. Lab_7/app_123456 -> 123456
+          index=$(basename "${{ steps.find-app.outputs.app }}" | sed 's/app_//')
+          wf=".github/workflows/lab_7_${index}.yml"
+
+          if [ ! -f "$wf" ]; then
+            echo "::error::Brak pliku workflow studenta: $wf"
+            echo "::error::Skopiuj Lab_7/app_${index}/ci.yml do .github/workflows/lab_7_${index}.yml zgodnie z krokiem 3.2 instrukcji"
+            exit 1
+          fi
+          echo "OK: Znaleziono workflow studenta: $wf"
+
+          # Sprawdź czy branches: zawiera tylko 'main' (błąd 1 nienoprawiony)
+          # Używamy python3 żeby bezpiecznie parsować YAML
+          python3 - <<PYEOF
+          import sys, yaml
+
+          with open("$wf") as f:
+              wf_data = yaml.safe_load(f)
+
+          on_section = wf_data.get("on", {}) or {}
+          push_cfg = on_section.get("push", {}) or {}
+          branches = push_cfg.get("branches", [])
+
+          if isinstance(branches, str):
+              branches = [branches]
+
+          if branches == ["main"]:
+              print("::error::Workflow nadal triggeruje się tylko na 'main' — zmień sekcję 'branches:' na swój feature branch (krok 6.3 instrukcji)")
+              sys.exit(1)
+
+          if not branches:
+              print("::warning::Sekcja 'branches:' w workflow jest pusta lub brakuje jej — upewnij się że trigger jest prawidłowy")
+          else:
+              print(f"OK: Trigger branches: {branches}")
+          PYEOF
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -79,6 +123,7 @@ jobs:
           done
 
       - name: Run student tests
+        timeout-minutes: 5
         run: |
           cd "${{ steps.find-app.outputs.app }}"
           python -m pytest test_calculator.py -v

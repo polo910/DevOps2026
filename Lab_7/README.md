@@ -81,13 +81,15 @@ cp -r Lab_7/app_0000 Lab_7/app_123456
 
 Cała dalsza praca odbywa się wewnątrz folderu `app_nrIndeksu`. Nie modyfikuj `app_0000`.
 
-- 3.2 Skopiować plik workflow do katalogu `.github/workflows/`
+- 3.2 Skopiować plik workflow do katalogu `.github/workflows/` i nadać mu unikalną nazwę
 
 ```bash
 cp Lab_7/app_123456/ci.yml .github/workflows/lab_7_123456.yml
 ```
 
 Nazwij plik `lab_7_nrIndeksu.yml` — unikalny sufiks zapobiega konfliktom z workflow innych studentów.
+
+**Uwaga:** po skopiowaniu plik wymaga edycji — jest celowo błędny i zawiera placeholder `app_nrIndeksu` w ścieżce. Edycję wykonasz w kroku 6.
 
 ### 4 Zapoznanie się z kodem aplikacji
 
@@ -103,23 +105,40 @@ pip install -r requirements.txt
 python calculator.py
 ```
 
-W osobnym terminalu:
+W osobnym terminalu przetestuj wszystkie endpointy:
 
 ```bash
 curl -X POST http://localhost:5000/add \
   -H "Content-Type: application/json" \
   -d '{"a": 10, "b": 5}'
 ```
-
 Oczekiwana odpowiedź: `{"result": 15}`
+
+```bash
+curl -X POST http://localhost:5000/subtract \
+  -H "Content-Type: application/json" \
+  -d '{"a": 10, "b": 3}'
+```
+Oczekiwana odpowiedź: `{"result": 7}`
+
+```bash
+curl -X POST http://localhost:5000/multiply \
+  -H "Content-Type: application/json" \
+  -d '{"a": 4, "b": 5}'
+```
+Oczekiwana odpowiedź: `{"result": 20}`
 
 ```bash
 curl -X POST http://localhost:5000/divide \
   -H "Content-Type: application/json" \
   -d '{"a": 10, "b": 0}'
 ```
-
 Oczekiwana odpowiedź: HTTP 400 z komunikatem o błędzie.
+
+```bash
+curl http://localhost:5000/health
+```
+Oczekiwana odpowiedź: `{"status": "ok"}`
 
 - 4.3 Przerwać działanie aplikacji (`Ctrl+C`)
 
@@ -177,7 +196,11 @@ git push
 
 - 7.2 Stworzyć Pull Request z brancha `lab_7/new_branch_nrIndeksu` do `main`.
 
-- 7.3 Zweryfikować, że workflow **NIE uruchomił się** dla tego Pull Requesta. Zrzut ekranu potwierdzający brak uruchomienia zachować do sprawozdania.
+- 7.3 Zweryfikować, że Twój workflow (`lab_7_nrIndeksu.yml`) **NIE uruchomił się** dla tego Pull Requesta.
+
+  W zakładce **Actions** po otwarciu PR zobaczysz uruchomiony workflow `lab_7_github_actions` — to jest workflow oceniający (uruchamiany przez prowadzącego na każdy PR do `main`), **nie** Twój workflow. Sprawdź czy na liście uruchomień pojawia się Twój workflow `CI` — jeśli naprawiłeś błąd 1 poprawnie, nie powinien się uruchomić.
+
+  Zrzut ekranu potwierdzający brak uruchomienia Twojego workflow `CI` na Pull Requeście zachować do sprawozdania.
 
 ### 8 Sprawozdanie
 

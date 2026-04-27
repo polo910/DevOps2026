@@ -206,7 +206,19 @@ git push
 
 - 8.1 Sprawozdanie ma być dokumentacją pracy, tj. opisem wykonanych kroków wraz ze zrzutami ekranu i technicznym uzasadnieniem każdej zmiany. Ma ono pozwolić na odtworzenie zadania z wykorzystaniem instrukcji ze sprawozdania.
 
-- 8.2 Ma być ono zapisane za pomocą Markdown w nowo stworzonym folderze `app_nrIndeksu/`.
+- 8.2 Sprawozdanie należy umieścić w **osobnym repozytorium**: [https://github.com/Tomzonkal/Devops_2026_sprawka](https://github.com/Tomzonkal/Devops_2026_sprawka)
+
+  Sklonuj repozytorium ze sprawozdaniami, stwórz folder `Lab_7/nrIndeksu/` i umieść tam plik Markdown ze sprawozdaniem:
+
+  ```bash
+  git clone https://github.com/Tomzonkal/Devops_2026_sprawka.git
+  cd Devops_2026_sprawka
+  mkdir -p Lab_7/123456
+  # stwórz plik sprawozdania Lab_7/123456/sprawozdanie.md
+  git add Lab_7/123456/
+  git commit -m "lab_7: sprawozdanie 123456"
+  git push
+  ```
 
 - 8.3 Sprawozdanie musi zawierać:
   - Opis każdego z 2 znalezionych błędów w workflow (przed/po naprawie — fragment kodu)
@@ -216,11 +228,11 @@ git push
   - Zrzut ekranu potwierdzający brak uruchomienia workflow na Pull Requeście do `main`
   - Odpowiedź (3–5 zdań) na pytanie: **Dlaczego branch-specific triggering jest ważny w CI/CD?**
 
-- 8.4 Wykonać commit i wypchnąć zmiany
+- 8.4 Kod (testy + naprawiony workflow) wypchnąć w repozytorium kursowym:
 
 ```bash
-git add Lab_7/app_123456/
-git commit -m "lab_7: dodano sprawozdanie"
+git add Lab_7/app_123456/ .github/workflows/lab_7_123456.yml
+git commit -m "lab_7: testy i naprawiony workflow"
 git push
 ```
 
@@ -232,8 +244,8 @@ git push
 
 
 ### Zaliczenie laboratoriów
-- Sprawozdanie w docelowej lokalizacji
-- Gotowe do oddania praca i sprawozdanie w postaci pull requesta (można dodać commita do brancha z już utworzonym pull requestem, aby dodać sprawozdanie)
+- Sprawozdanie w repozytorium [Devops_2026_sprawka](https://github.com/Tomzonkal/Devops_2026_sprawka) w folderze `Lab_7/nrIndeksu/`
+- Kod (testy + naprawiony workflow) w postaci pull requesta do tego repozytorium (można dodać commita do brancha z już utworzonym pull requestem)
 - Wszelkie edycje skryptów testowych i automatyzujących workflow są zabronione (czyli plików niewymienionych w instrukcji)
 - Pushe mają być wykonywane WYŁĄCZNIE Z NASZYCH KONT GITHUB
 

@@ -205,16 +205,12 @@ jobs:
           fi
           echo "OK: Dzielenie przez zero zwraca HTTP 400"
 
-      - name: Check report exists
+      - name: Check report location
         run: |
-          app="${{ steps.find-app.outputs.app }}"
-          echo "--- Sprawdzam sprawozdanie ---"
-          if find "$app" -maxdepth 1 -name "*.md" ! -name "README.md" | grep -q .; then
-            report=$(find "$app" -maxdepth 1 -name "*.md" ! -name "README.md" | head -1)
-            echo "OK: Znaleziono sprawozdanie: $report"
-          else
-            echo "::warning::Nie znaleziono pliku sprawozdania (*.md) w $app"
-          fi
+          echo "--- Sprawozdanie ---"
+          echo "Sprawozdanie dla tego laboratorium trafia do zewnętrznego repozytorium:"
+          echo "https://github.com/Tomzonkal/Devops_2026_sprawka w folderze Lab_7/nrIndeksu/"
+          echo "Grading nie weryfikuje zewnętrznego repo — sprawdzane ręcznie przez prowadzącego."
 
       - name: Summary
         run: |

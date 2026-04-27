@@ -228,13 +228,11 @@ git push
   - Zrzut ekranu potwierdzający brak uruchomienia workflow na Pull Requeście do `main`
   - Odpowiedź (3–5 zdań) na pytanie: **Dlaczego branch-specific triggering jest ważny w CI/CD?**
 
-- 8.4 Kod (testy + naprawiony workflow) wypchnąć w repozytorium kursowym:
+- 8.4 Upewnij się, że w repozytorium kursowym (DevOps2026) na swoim branchu znajdują się:
+  - `Lab_7/app_123456/test_calculator.py`
+  - `.github/workflows/lab_7_123456.yml` (naprawiony workflow)
 
-```bash
-git add Lab_7/app_123456/ .github/workflows/lab_7_123456.yml
-git commit -m "lab_7: testy i naprawiony workflow"
-git push
-```
+  Jeśli nie wykonałeś jeszcze commita tych plików — zrób to teraz, a następnie utwórz Pull Request z brancha `lab_7/new_branch_123456` do `main` w repozytorium kursowym.
 
 ### Wskazówki
 
@@ -245,7 +243,7 @@ git push
 
 ### Zaliczenie laboratoriów
 - Sprawozdanie w repozytorium [Devops_2026_sprawka](https://github.com/Tomzonkal/Devops_2026_sprawka) w folderze `Lab_7/nrIndeksu/`
-- Kod (testy + naprawiony workflow) w postaci pull requesta do tego repozytorium (można dodać commita do brancha z już utworzonym pull requestem)
+- Kod (testy + naprawiony workflow) w postaci pull requesta do repozytorium kursowego (DevOps2026) — można dodać commita do brancha z już utworzonym pull requestem
 - Wszelkie edycje skryptów testowych i automatyzujących workflow są zabronione (czyli plików niewymienionych w instrukcji)
 - Pushe mają być wykonywane WYŁĄCZNIE Z NASZYCH KONT GITHUB
 

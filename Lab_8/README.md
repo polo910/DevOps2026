@@ -169,10 +169,6 @@ Oczekiwana odpowiedź: `{"status": "ok"}`
 
 - 4.3 Przerwać działanie aplikacji (`Ctrl+C`)
 
-- 4.4 Przeczytać plik `Dockerfile` i zrozumieć każdą instrukcję
-
-Dockerfile jest już napisany i gotowy do użycia. Przeanalizuj każdą linię — będziesz musiał opisać ją w sprawozdaniu.
-
 ### 5 Uruchomienie aplikacji w kontenerze Docker
 
 - 5.1 Zbudować obraz Docker lokalnie (z katalogu `Lab_8/`)
@@ -207,7 +203,7 @@ python app.py &
 python -m pytest test_app.py -v
 ```
 
-- 6.4 Jeżeli testy nie przechodzą — poprawić je. Może być konieczna kilkukrotna iteracja z AI. Udokumentować każdą iterację w sprawozdaniu.
+- 6.4 Jeżeli testy nie przechodzą — poprawić je. Może być konieczna kilkukrotna iteracja z AI.
 
 - 6.5 Zatrzymać aplikację uruchomioną w tle:
 

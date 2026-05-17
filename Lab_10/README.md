@@ -430,32 +430,8 @@ Wynik powinien byc pusty lub zakonczyc sie bledem `ResourceGroupNotFound` — ob
 - **`cloud-init: status: running`** — VM wciaz instaluje pakiety. Uruchom ponownie `cloud-init status --wait` i poczekaj kilka minut.
 
 
-### 13 Wyslanie kodu do repozytorium kursowego
-
-- 13.1 Skopiuj folder terraform do folderu z numerem indeksu:
-
-```bash
-cp -r Lab_10/terraform Lab_10/terraform_nrIndeksu
-```
-
-Cala dalsza edycja (jesli jest potrzebna) odbywa sie wewnatrz `Lab_10/terraform_nrIndeksu`. Nie modyfikuj `Lab_10/terraform/`.
-
-- 13.2 Wypchnij zmiany:
-
-```bash
-git add Lab_10/terraform_nrIndeksu/ .github/workflows/lab10_nrIndeksu.yml
-git commit -m "lab10: terraform IaC nrIndeksu"
-git push
-```
-
-- 13.3 Stworz Pull Request z brancha `lab10/nrIndeksu` do `main` w repozytorium kursowym (DevOps2026).
-
-- 13.4 Zweryfikuj, ze workflow oceniajacy `lab_10_terraform` uruchomil sie i przeszedl (sprawdza: brak TODO, terraform validate).
-
-
 ### Zaliczenie laboratoriow
 
 - Workflow `Terraform Lab 10` w forku studenta — oba joby (`terraform-plan`, `terraform-apply`) sa zielone
 - Obraz `lab10-app:v1` widoczny w ACR (`az acr repository show-tags --name ... --repository lab10-app`)
 - Infrastruktura zniszczona (`terraform destroy`) — brak zasobow w subskrypcji po zakonczeniu laboratorium
-- Pull Request do repozytorium kursowego (DevOps2026) z folderem `Lab_10/terraform_nrIndeksu/` i plikiem `lab10_nrIndeksu.yml`

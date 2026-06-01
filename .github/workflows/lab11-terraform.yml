@@ -68,6 +68,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Sprawdzenie TODO jako PIERWSZY krok — przed terraform init.
+      # Placeholder '???' jest nieprawidlowa skladnia HCL, wiec terraform init
+      # failuje z cryptycznym bledem jezeli nie przerwiemy wczesniej.
+      - name: Sprawdz czy TODO zostaly usuniete
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          remaining=$(grep -rn '???' . 2>/dev/null || true)
+          if [ -n "$remaining" ]; then
+            echo "::error::Uzupelnij wszystkie miejsca oznaczone '???' w plikach .tf przed wypchnieciem:"
+            echo "$remaining"
+            exit 1
+          fi
+          echo "OK: Brak placeholderow do uzupelnienia"
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -80,17 +94,6 @@ jobs:
       - name: Terraform Validate
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform validate
-
-      - name: Sprawdz czy TODO zostaly usuniete
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          remaining=$(grep -rn '???' . 2>/dev/null || true)
-          if [ -n "$remaining" ]; then
-            echo "::error::Znaleziono niezastapione placeholdery '???':"
-            echo "$remaining"
-            exit 1
-          fi
-          echo "OK: Brak placeholderow do uzupelnienia"
 
   # ----------------------------------------------------------------
   # Job 2: terraform plan — uzywa srodowiska <nrIndeksu>

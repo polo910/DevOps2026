@@ -25,11 +25,11 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "podinfo" {
 
     # ← TODO: podaj minimalna liczbe replik (min. 1)
     # Nawet przy braku ruchu HPA nie zejdzie ponizej tej wartosci
-    min_replicas = ???
+    min_replicas = 0
 
     # ← TODO: podaj maksymalna liczbe replik (max. 5 dla tego labu)
     # HPA nie przekroczy tej wartosci nawet przy bardzo duzym obciazeniu
-    max_replicas = ???
+    max_replicas = 0
 
     metric {
       type = "Resource"
@@ -45,7 +45,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "podinfo" {
           # Zbyt wysoki prog (np. 90) = HPA reaguje pozno
           # Zbyt niski prog (np. 10) = HPA reaguje na kazdy request
           # Wskazowka: dobra wartosc to ok. 50%
-          average_utilization = ???
+          average_utilization = 0
         }
       }
     }

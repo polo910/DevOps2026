@@ -12,14 +12,14 @@ resource "kubernetes_config_map_v1" "app_config" {
 
   data = {
     # Wiadomosc wyswietlana przez podinfo na stronie glownej.
-    # Sprawdz efekt: curl http://<INGRESS-IP>/ | grep message
+    # Sprawdz efekt: curl http://<APP-IP>/ | grep message
     # ← TODO: wpisz dowolna wiadomosc (np. "Czesc z AGH DevOps 2026!")
-    PODINFO_UI_MESSAGE = "???"
+    PODINFO_UI_MESSAGE = "ZMIEN_WIADOMOSC"
 
     # Poziom logowania aplikacji.
     # Dostepne wartosci: debug | info | warn | error
     # ← TODO: wybierz poziom logowania
-    PODINFO_LOG_LEVEL = "???"
+    PODINFO_LOG_LEVEL = "ZMIEN_LOG_LEVEL"
   }
 }
 
@@ -39,6 +39,6 @@ resource "kubernetes_secret_v1" "app_secret" {
 
   data = {
     # ← TODO: wpisz dowolne haslo (plain text, min. 8 znakow)
-    password = "???"
+    password = "ZMIEN_HASLO"
   }
 }

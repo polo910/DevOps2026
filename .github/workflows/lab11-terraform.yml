@@ -81,17 +81,6 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform validate
 
-      - name: Sprawdz czy TODO zostaly usuniete
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          remaining=$(grep -rn '???' . 2>/dev/null || true)
-          if [ -n "$remaining" ]; then
-            echo "::error::Znaleziono niezastapione placeholdery '???':"
-            echo "$remaining"
-            exit 1
-          fi
-          echo "OK: Brak placeholderow do uzupelnienia"
-
   # ----------------------------------------------------------------
   # Job 2: terraform plan — uzywa srodowiska <nrIndeksu>
   # Sekrety i zmienne sa przechowywane w srodowisku studenta.

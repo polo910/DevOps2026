@@ -78,16 +78,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 # Uprawnienie: VM moze pobierac bloby z Storage Account (do pobrania Dockerfile)
 resource "azurerm_role_assignment" "vm_sa_blob_reader" {
   scope                = azurerm_storage_account.sa.id
-  role_definition_name = "Storage Blob Data Reader"
-  principal_id         = azurerm_linux_virtual_machine.vm.identity[0].principal_id
+  role_definition_name = "AcrPush"
+  principal_id = azurerm_linux_virtual_machine.vm.identity[0].principal_id
 }
 
-# ← TODO: uzupelnij uprawnienie VM do ACR
-# VM musi miec mozliwosc wypychania obrazow Docker do rejestru.
-# Dostepne role ACR: AcrPull (tylko pull), AcrPush (pull + push), AcrDelete (pull + push + delete)
-# Wskazowka: principal_id to azurerm_linux_virtual_machine.vm.identity[0].principal_id
-resource "azurerm_role_assignment" "vm_acr_push" {
-  scope                = azurerm_container_registry.acr.id
-  role_definition_name = "" # ← TODO: wybierz minimalna role umozliwiajaca docker push
-  principal_id         = "" # ← TODO
-}

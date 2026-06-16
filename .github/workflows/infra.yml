@@ -17,15 +17,15 @@ jobs:
     name: 'Terraform GitOps'
     runs-on: ubuntu-latest
 
+    # Wstrzyknięcie Twojej aktywnej sesji bezpośrednio do pamięci Terraforma
+    env:
+      ARM_ACCESS_TOKEN: ${{ secrets.AZURE_ACCESS_TOKEN }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v4
-
-   # Logowanie bezpośrednio wygenerowanym tokenem z jawnym wskazaniem dzierżawy uczelnianej
-    - name: Azure Login via Access Token
-      run: |
-        az login --service-principal -u "http://AzureCLI" -p "${{ secrets.AZURE_ACCESS_TOKEN }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
-        az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3

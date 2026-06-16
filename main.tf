@@ -52,4 +52,4 @@ resource "azurerm_subnet" "aks_subnet" {
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.0.0/22"]
 }
-# ce trigger infra pipeline 5.0
+# e trigger infra pipeline 5.0

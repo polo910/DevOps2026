@@ -19,12 +19,11 @@ terraform {
 }
 
 provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
-  skip_provider_registration = true
+  features {}
+
+  # Wymuszenie autoryzacji tokenem statycznym i zablokowanie prób wywołania az login
+  use_cli_hybrid_auth = false
+  use_msi             = false
 }
 
 provider "kubernetes" {

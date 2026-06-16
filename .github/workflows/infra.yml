@@ -17,11 +17,13 @@ jobs:
     name: 'Terraform GitOps'
     runs-on: ubuntu-latest
 
+    # Przekazanie tokenu sesji i wyłączenie CLI na poziomie środowiska
     env:
       ARM_ACCESS_TOKEN: ${{ secrets.AZURE_ACCESS_TOKEN }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ARM_USE_CLI: false
+      ARM_USE_MSI: false
 
     steps:
     - name: Checkout Source Code

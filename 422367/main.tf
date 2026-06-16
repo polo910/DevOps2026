@@ -20,10 +20,6 @@ terraform {
 
 provider "azurerm" {
   features {}
-
-  # Wymuszenie autoryzacji tokenem statycznym i zablokowanie prób wywołania az login
-  use_cli_hybrid_auth = false
-  use_msi             = false
 }
 
 provider "kubernetes" {

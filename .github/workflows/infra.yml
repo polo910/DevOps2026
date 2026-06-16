@@ -21,10 +21,11 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    # Bezpośrednie i pancerne logowanie użytkownika w konsoli CLI
-    - name: Azure Login via User Credentials
+    # Logowanie bezpośrednio wygenerowanym tokenem z pominięciem MFA i Entra ID
+    - name: Azure Login via Access Token
       run: |
-        az login -u "${{ secrets.AZURE_USERNAME }}" -p "${{ secrets.AZURE_PASSWORD }}"
+        az login --service-principal -u "http://AzureCLI" -p "${{ secrets.AZURE_ACCESS_TOKEN }}" --tenant "common"
+        az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3

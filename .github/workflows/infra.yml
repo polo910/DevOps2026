@@ -12,11 +12,6 @@ on:
     paths:
       - '**.tf'
 
-permissions:
-  id-token: write
-  contents: read
-  pull-requests: write
-
 jobs:
   terraform:
     name: 'Terraform GitOps'
@@ -26,10 +21,10 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # Bezpośrednie i pancerne logowanie użytkownika w konsoli CLI
+    - name: Azure Login via User Credentials
+      run: |
+        az login -u "${{ secrets.AZURE_USERNAME }}" -p "${{ secrets.AZURE_PASSWORD }}"
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3

@@ -1,0 +1,57 @@
+name: 'Application CI/CD to AKS'
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Dockerfile'
+      - 'app/**'
+      - 'k8s_manifests.tf'
+
+jobs:
+  build-and-deploy:
+    name: 'Build, Push & Rollout'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Azure Login via Token
+      uses: azure/login@v2
+      with:
+        allow-no-subscriptions: true
+        auth-type: IDENTITY
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      env:
+        AZURE_ACCESS_TOKEN: ${{ secrets.AZURE_TOKEN }}
+
+    - name: Azure Container Registry Login
+      run: |
+        az acr login --name ${{ secrets.ACR_NAME }}
+
+    - name: Build and Push Docker Image
+      run: |
+        ACR_SERVER=${{ secrets.ACR_NAME }}.azurecr.io
+        IMAGE_NAME=app
+        TAG=${{ github.sha }}
+        
+        docker build -t $ACR_SERVER/$IMAGE_NAME:$TAG .
+        docker push $ACR_SERVER/$IMAGE_NAME:$TAG
+
+    - name: Get AKS Credentials
+      run: |
+        az aks get-credentials \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --name ${{ secrets.AKS_CLUSTER_NAME }} \
+          --overwrite-existing
+
+    - name: Deploy to Kubernetes (AKS)
+      run: |
+        ACR_SERVER=${{ secrets.ACR_NAME }}.azurecr.io
+        IMAGE_NAME=app
+        TAG=${{ github.sha }}
+        
+        kubectl set image deployment/app app=$ACR_SERVER/$IMAGE_NAME:$TAG
+        kubectl rollout status deployment/app --timeout=120s

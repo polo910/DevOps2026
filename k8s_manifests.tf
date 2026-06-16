@@ -26,7 +26,7 @@ resource "kubernetes_deployment" "app" {
 
       spec {
         container {
-          image = "${azurerm_container_registry.acr.login_server}/my-app:latest"
+          image = "placeholder"
           name  = "app-container"
 
           port {

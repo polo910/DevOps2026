@@ -1,0 +1,49 @@
+name: 'Terraform Infrastructure GitOps'
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.tf'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.tf'
+
+jobs:
+  terraform:
+    name: 'Terraform GitOps'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Azure Login via Token
+      uses: azure/login@v2
+      with:
+        allow-no-subscriptions: true
+        auth-type: IDENTITY
+        client-id: "" # Puste dla logowania tokenem użytkownika
+        tenant-id: ""
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      env:
+        AZURE_ACCESS_TOKEN: ${{ secrets.AZURE_TOKEN }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.9.0
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      if: github.event_name == 'pull_request'
+      run: terraform plan -no-color
+
+    - name: Terraform Apply
+      if: github.event_name == 'push'
+      run: terraform apply -auto-approve

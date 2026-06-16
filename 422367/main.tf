@@ -15,5 +15,5 @@ provider "azurerm" {
  
 resource "azurerm_resource_group" "rg" {
   name     = "test-rg"
-  location = polandcentral
+  location = "polandcentral"
 }
